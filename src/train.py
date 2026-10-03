@@ -23,3 +23,4 @@ hist = model.fit(d["x_train"], d["y_train"], validation_data=(d["x_val"], d["y_v
 os.makedirs("models", exist_ok=True)
 model.save("models/model.h5")
 pd.DataFrame(hist.history).to_csv("models/history.csv", index=False)
+# model trained with params from params.yaml
