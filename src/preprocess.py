@@ -5,8 +5,13 @@ from sklearn.model_selection import train_test_split
 
 p = yaml.safe_load(open("params.yaml"))["preprocess"]
 d = np.load("data/raw/fashion.npz")
-x_train = (d["x_train"].astype("float32") / 255.0 - 0.2860) / 0.3530
-x_test = (d["x_test"].astype("float32") / 255.0 - 0.2860) / 0.3530
+
+# merged normalization: scale to [0, 1], then standardize with train statistics
+x_train = d["x_train"].astype("float32") / 255.0
+x_test = d["x_test"].astype("float32") / 255.0
+mean, std = x_train.mean(), x_train.std()
+x_train = (x_train - mean) / std
+x_test = (x_test - mean) / std
 
 x_tr, x_val, y_tr, y_val = train_test_split(
     x_train, d["y_train"], test_size=p["test_size"], random_state=p["seed"], stratify=d["y_train"])
